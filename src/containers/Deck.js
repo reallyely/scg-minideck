@@ -1,33 +1,57 @@
 import React, { Component } from 'react';
 import DeckControls from '../components/DeckControls'
 import DeckList from '../components/DeckList'
+import { bgScale } from '../Style'
 
 export default class Deck extends Component {
-  // categories = _.uniqBy(this.props.cards, 'type').map(e => e.type)
-  // constructor(props) {
-  //   super(props);
-  //   // DeckList
-  //   // RandomizedVersion of decklist for pulling out cards into the hand
-  // }
+  state ={
+    deckListHeight: 0,
+    phantomDeckWidth: 0,
+  }
+  constructor(props) {
+    super(props)
+    this.getDC = this.getDC.bind(this)
+  }
 
+  getDC(ref) {
+    if (ref.clientHeight) {
+      this.setState({
+        deckListHeight: window.innerHeight - ref.clientHeight - 32,
+        phantomDeckWidth: ref.clientWidth + 16
+      })
+    }
+  }
   render() {
-    console.log(this.props)
     return (
-      <div style={{margin: '.5rem', display: 'flex', flexDirection: 'column', justifyContent: 'flex-start'}}>
-        {/*controls*/}
-        <DeckControls
-          decks={this.props.decks}
-          staticDeck={this.props.staticDeck}
-          dynamicDeck={this.props.dynamicDeck}
-          handleFilter={this.props.handleFilter}
-          handleShuffle={this.props.handleShuffle}
-          handleDraw={this.props.handleDraw}
-        />
-        <DeckList cards={this.props.staticDeck} />
-        {/*list
-          all cards
-          filter value
-        */}
+      <div>
+        <div style={{
+          minWidth: '17rem',
+          maxWidth: '17rem',
+          margin: '.5rem',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'flex-start',
+          position: 'fixed',
+        }}>
+          {/*controls*/}
+          <DeckControls
+            decks={this.props.decks}
+            deckList={this.props.deckList}
+            dynamicDeck={this.props.dynamicDeck}
+            handleFilter={this.props.handleFilter}
+            handleDrawHand={this.props.handleDrawHand}
+            handleDraw={this.props.handleDraw}
+            handleRef={this.getDC}
+            handleGetSelectedDeck={this.props.handleGetSelectedDeck}
+            selectedDeck={this.props.selectedDeck}
+          />
+          <DeckList style={{height: this.state.deckListHeight}} deckList={this.props.deckList} />
+          {/*list
+            all cards
+            filter value
+          */}
+        </div>
+        <div style={{minWidth: this.state.phantomDeckWidth , content: 'asdgoiashdg'}} />
       </div>
     );
   }

@@ -3,15 +3,21 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "axios": "^0.16.1",
+    "chroma-js": "^1.3.3",
+    "concurrently": "^3.4.0",
     "lodash": "^4.17.4",
     "react": "^15.5.4",
-    "react-dom": "^15.5.4"
+    "react-custom-scrollbars": "^4.1.0",
+    "react-dom": "^15.5.4",
+    "react-scrollbar": "^0.5.1",
+    "react-transition-group": "^1.1.1"
   },
   "devDependencies": {
     "react-scripts": "0.9.5"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "concurrently \"react-scripts start\" \"php -S localhost:9090 .\\src\\api\\index.php\"",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"

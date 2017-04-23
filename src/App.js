@@ -2,102 +2,96 @@ import React, { Component } from 'react';
 import _ from 'lodash';
 import Hand from './containers/Hand.js';
 import Deck from './containers/Deck.js';
-
-  const decks = [
-    {
-      id: 123,
-      name: 'Deck 1',
-      type: 'Deck 1 type'
-    },
-    {
-      id: 456,
-      name: 'Deck 2',
-      type: 'Deck 2 type'
-    },
-  ];
-  const cards = [
-    {
-      name: 'This name',
-      type: 'Land',
-      image: 'https://s-media-cache-ak0.pinimg.com/736x/02/2d/f9/022df9c11dd13dff9dcb519288a4d9d6.jpg'
-    },
-    {
-      name: 'Card 1',
-      type: 'Land',
-      image: 'http://www.manaleak.com/magic-the-gathering/images/Borderland_Ranger_image25595.jpg'
-    },
-    {
-      name: 'Card 2',
-      type: 'Land',
-      image: 'https://upload.wikimedia.org/wikipedia/en/a/aa/Magic_the_gathering-card_back.jpg'
-    },
-    {
-      name: 'Card 3',
-      type: 'Artifact',
-      image: 'https://upload.wikimedia.org/wikipedia/en/a/aa/Magic_the_gathering-card_back.jpg'
-    },
-    {
-      name: 'Card 4',
-      type: 'Artifact',
-      image: 'https://upload.wikimedia.org/wikipedia/en/a/aa/Magic_the_gathering-card_back.jpg'
-    },
-    {
-      name: 'Card 5',
-      type: 'this type',
-      image: 'https://upload.wikimedia.org/wikipedia/en/a/aa/Magic_the_gathering-card_back.jpg'
-    },
-    {
-      name: 'This name 2',
-      type: 'this type 2',
-      image: 'https://upload.wikimedia.org/wikipedia/en/a/aa/Magic_the_gathering-card_back.jpg'
-    }
-  ]
+import axios from 'axios';
+import { text, bgScale } from './Style'
 
 class App extends Component {
 
   constructor(props) {
     super(props);
-    this.updateDecklistByCategory = this.updateDecklistByCategory.bind(this);
-    this.shuffleDeck = this.shuffleDeck.bind(this);
+    this.filterDeckList = this.filterDeckList.bind(this);
+    this.getSelectedDeck = this.getSelectedDeck.bind(this);
+    this.expandDeckByQuantity = this.expandDeckByQuantity.bind(this);
+    this.drawHand = this.drawHand.bind(this);
     this.draw = this.draw.bind(this);
   }
   state = {
-    staticDeck : cards,
-    dynamicDeck: _.shuffle(cards),
-    hand: []
+    decks: [],
+    staticDeck : [],
+    drawDeck: [],
+    deckList: [],
+    hand: [],
+    selectedDeck: undefined,
+  }
+  componentDidMount() {
+    axios.get('http://localhost:9090/decks')
+    .then(res => this.setState({decks: [].concat({name: 'Select a Deck'}, res.data)}))
+    .catch(console.log)
   }
 
-  updateDecklistByCategory(filterText) {
-    let filteredCards = cards.filter(card => {
+  filterDeckList(filterText) {
+    let filteredCards = this.state.staticDeck.filter(card => {
       let reg = new RegExp(`.*${filterText}.*`, 'i')
       return card.name.match(reg) || card.type.match(reg)
     })
-    this.setState({staticDeck: filteredCards});
+    this.setState({deckList: filteredCards});
   }
 
-  shuffleDeck(deck) {
-    this.setState({dynamicDeck: _.shuffle(deck), hand: []});
+  expandDeckByQuantity(deck) {
+    return _.flatten(deck.map(({id, name, image, quantity}) => new Array(quantity).fill({id, name, image})))
   }
 
-  draw(deck, amount) {
-    const drawn = deck.splice(0, amount);
+
+  getSelectedDeck(event) {
+    const deckID = event.target.value
+    axios.get(`http://localhost:9090/decks/${deckID}`)
+    .then(({data}) => {
+      this.setState({
+        selectedDeck: deckID,
+        staticDeck: data,
+        drawDeck: _.shuffle(this.expandDeckByQuantity(data)),
+        deckList: data,
+        hand: []
+      })
+    })
+    .catch(console.log)
+  }
+
+  drawHand() {
+    this.setState(prevState => {
+      let newDrawDeck = _.shuffle(this.expandDeckByQuantity(prevState.staticDeck))
+      let newHand = newDrawDeck.splice(0, 7);
+      return {
+        drawDeck: newDrawDeck,
+        hand: newHand
+      }
+    });
+  }
+
+  draw(deck) {
+    const drawn = deck.splice(0, 1);
     this.setState({hand: this.state.hand.concat(drawn)})
   }
 
   render() {
     return (
       <div className="App" style={{
-        display:        'flex',
-        flexDirection:  'row',
-        justifyContent: 'fex-start',
-        padding:        '1rem'
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        padding: '1rem',
+        fontFamily: 'Alegreya Sans',
+        color: text,
       }}>
-        <Deck decks={decks}
-          dynamicDeck={this.state.dynamicDeck}
-          staticDeck={this.state.staticDeck}
-          handleFilter={this.updateDecklistByCategory}
-          handleShuffle={this.shuffleDeck}
+        <Deck
+          decks={this.state.decks}
+          dynamicDeck={this.state.drawDeck}
+          deckList={this.state.deckList}
+          selectedDeck={this.state.selectedDeck}
+          handleFilter={this.filterDeckList}
+          handleDrawHand={this.drawHand}
           handleDraw={this.draw}
+          handleGetSelectedDeck={this.getSelectedDeck}
         />
         <Hand cards={this.state.hand} />
       </div>
