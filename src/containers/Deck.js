@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import DeckControls from '../components/DeckControls'
 import DeckList from '../components/DeckList'
-import { bgScale } from '../Style'
 
 export default class Deck extends Component {
   state ={
@@ -21,6 +20,7 @@ export default class Deck extends Component {
       })
     }
   }
+
   render() {
     return (
       <div>
@@ -37,7 +37,7 @@ export default class Deck extends Component {
           <DeckControls
             decks={this.props.decks}
             deckList={this.props.deckList}
-            dynamicDeck={this.props.dynamicDeck}
+            drawDeck={this.props.drawDeck}
             handleFilter={this.props.handleFilter}
             handleDrawHand={this.props.handleDrawHand}
             handleDraw={this.props.handleDraw}

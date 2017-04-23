@@ -1,6 +1,5 @@
 import React, {Component} from 'react'
 import _ from 'lodash'
-import { accentScale } from '../Style'
 
 import {Scrollbars} from 'react-custom-scrollbars'
 

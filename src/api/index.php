@@ -15,9 +15,9 @@ $query;
 if (preg_match('/decks$/', $basename)) {
   // get all decks
   $query = "SELECT deck_id as id, deck_name as name, deck_format as format FROM decks ORDER BY name";
-  // echo json_encode($out2);
+
 } elseif (preg_match('/\/decks\/\d+$/', $request)) {
-  // # get specific deck
+  // get specific deck
   $query = '
     SELECT
       dc.qty as quantity,

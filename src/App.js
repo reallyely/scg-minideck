@@ -3,7 +3,7 @@ import _ from 'lodash';
 import Hand from './containers/Hand.js';
 import Deck from './containers/Deck.js';
 import axios from 'axios';
-import { text, bgScale } from './Style'
+import { text } from './Style'
 
 class App extends Component {
 
@@ -38,7 +38,9 @@ class App extends Component {
   }
 
   expandDeckByQuantity(deck) {
-    return _.flatten(deck.map(({id, name, image, quantity}) => new Array(quantity).fill({id, name, image})))
+    return _.flatten(deck.map(({id, name, image, quantity}) =>  (
+      new Array(Number(quantity)).fill({id, name, image})
+    )))
   }
 
 
@@ -68,9 +70,8 @@ class App extends Component {
     });
   }
 
-  draw(deck) {
-    const drawn = deck.splice(0, 1);
-    this.setState({hand: this.state.hand.concat(drawn)})
+  draw() {
+    this.setState(prevState => ({hand: prevState.hand.concat(prevState.drawDeck.splice(0,1))}))
   }
 
   render() {
@@ -85,7 +86,7 @@ class App extends Component {
       }}>
         <Deck
           decks={this.state.decks}
-          dynamicDeck={this.state.drawDeck}
+          drawDeck={this.state.drawDeck}
           deckList={this.state.deckList}
           selectedDeck={this.state.selectedDeck}
           handleFilter={this.filterDeckList}

@@ -8,7 +8,7 @@ export default class DeckControls extends Component {
     this.props.handleRef(this.dcRef)
   }
   render() {
-    let {handleDraw, handleDrawHand, handleFilter, decks, deckList, dynamicDeck, ...rest} = this.props
+    let {handleDraw, handleDrawHand, handleFilter, decks, deckList, ...rest} = this.props
     return (
       <div
         ref={div => this.dcRef  = div}
@@ -24,7 +24,7 @@ export default class DeckControls extends Component {
           </Button>
           <Button
             style={{width: '51%'}}
-            handleClick={() => handleDraw(dynamicDeck)}
+            handleClick={() => handleDraw()}
           >
             Draw Card
           </Button>
@@ -71,7 +71,6 @@ class Button extends Component {
   handleFocus(e) {
     let i = e.type === 'focus' ? `0px 0px 3px 1px ${primaryScale[3]}` : ""
     this.setState(({style}) => style.boxShadow = i)
-
   }
   render() {
     return (
@@ -92,9 +91,7 @@ class Button extends Component {
 }
 
 class Menu extends Component {
-  constructor(props) {
-    super(props)
-  }
+
   state = { style: {}, deckFormat: ''}
   style = {
     height: '3rem',
@@ -107,7 +104,7 @@ class Menu extends Component {
   }
   componentWillReceiveProps(nextProps) {
     let deckID = nextProps.selectedDeck
-    let deckFormat = nextProps.items.filter(e => e.id == deckID).reduce((out, e) => (e.format), '')
+    let deckFormat = nextProps.items.filter(e => Number(e.id) === Number(deckID)).reduce((out, e) => (e.format), '')
     this.setState({deckFormat})
   }
 
