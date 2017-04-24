@@ -1,5 +1,6 @@
 <?php
-header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Origin: http://localhost:3000");
+header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
 $request = $_SERVER['REQUEST_URI'];
 
 // $input = json_decode(file_get_contents('php://input'), true);
