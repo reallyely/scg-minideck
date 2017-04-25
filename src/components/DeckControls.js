@@ -3,7 +3,6 @@ import { text, modScale, accentScale, bgScale, primaryScale } from '../Style.js'
 import H3 from './H3'
 
 export default class DeckControls extends Component {
-  state = {  }
   componentDidMount() {
     this.props.handleRef(this.dcRef)
   }
@@ -14,7 +13,11 @@ export default class DeckControls extends Component {
         ref={div => this.dcRef  = div}
         style={{display: 'flex', flexDirection: 'column'}} {...rest}
       >
-        <Menu items={decks} handleGetSelectedDeck={this.props.handleGetSelectedDeck} selectedDeck={this.props.selectedDeck}/>
+        <Menu
+          items={decks}
+          handleGetSelectedDeck={this.props.handleGetSelectedDeck}
+          selectedDeck={this.props.selectedDeck}
+        />
         <div style={{display:'flex', flexDirection:'row'}}>
           <Button
             style={{width: '50%', marginRight:'-.1rem'}}
@@ -37,25 +40,26 @@ export default class DeckControls extends Component {
 }
 
 class Button extends Component {
-  state = {
-    hovered: false,
-    style: {}
-  }
-  style = {
-    height: '2rem',
-    borderRadius: '.1rem',
-    backgroundColor: primaryScale[0],
-    color: bgScale[0],
-    border: 'none',
-    margin: '.2rem',
-    textTransform: 'uppercase',
-    padding: '.2rem',
-    transitionProperty: 'background-color,border-color,color,box-shadow',
-    transitionDuration: '0.15s',
-    outline: 'none'
-  }
+
   constructor(props) {
     super(props);
+    this.state = {
+      hovered: false,
+      style: {}
+    }
+    this.style = {
+      height: '2rem',
+      borderRadius: '.1rem',
+      backgroundColor: primaryScale[0],
+      color: bgScale[0],
+      border: 'none',
+      margin: '.2rem',
+      textTransform: 'uppercase',
+      padding: '.2rem',
+      transitionProperty: 'background-color,border-color,color,box-shadow',
+      transitionDuration: '0.15s',
+      outline: 'none'
+    }
     this.handleHover = this.handleHover.bind(this)
     this.handlePress = this.handlePress.bind(this)
     this.handleFocus = this.handleFocus.bind(this)
@@ -91,17 +95,22 @@ class Button extends Component {
 }
 
 class Menu extends Component {
-
-  state = { style: {}, deckFormat: ''}
-  style = {
-    height: '3rem',
-    fontSize: '2rem',
-    fontFamily: 'Oswald, sans-serif',
-    backgroundColor: 'transparent',
-    border: '0rem none',
-    color: primaryScale[1],
-    outline: 'none'
+  constructor(props) {
+    super(props);
+    this.state = { style: {}, deckFormat: ''}
+    this.menuStyle = {
+      fontSize: '2rem',
+      fontFamily: 'Oswald, sans-serif',
+      backgroundColor: 'transparent',
+      border: '0rem none',
+      color: primaryScale[1],
+      outline: 'none'
+    }
+    this.optionStyle = {
+      backgroundColor: bgScale[0]
+    }
   }
+
   componentWillReceiveProps(nextProps) {
     let deckID = nextProps.selectedDeck
     let deckFormat = nextProps.items.filter(e => Number(e.id) === Number(deckID)).reduce((out, e) => (e.format), '')
@@ -114,29 +123,56 @@ class Menu extends Component {
   }
 
   render() {
+    const options = this.props.items.map(e => (
+      <option style={this.optionStyle} key={`${e.id}-${e.name}`} value={e.id}>
+        {e.name}
+      </option>
+    ));
+
     return (
       <span>
-        <H3 style={{color: accentScale[3], paddingLeft: '.25em'}}>{this.state.deckFormat}</H3>
         <select
-          style={Object.assign({}, this.style, this.props.style, this.state.style)}
+          style={Object.assign({}, this.menuStyle, this.props.style, this.state.style)}
           onMouseEnter={e => this.handleHover(e)}
           onMouseLeave={e => this.handleHover(e)}
           onChange={this.props.handleGetSelectedDeck}
           ref={select => this.menu = select}
         >
-          {this.props.items.map(e => {
-            return <option key={`${e.id}-${e.name}`} value={e.id}>{e.name}</option>
-          })}
+          {options}
         </select>
+        <div style={{height:'1.5em'}}>
+          <H3 style={{color: accentScale[3], paddingLeft: '.25em'}}>{this.state.deckFormat}</H3>
+        </div>
       </span>
     );
   }
 }
 
 class Filter extends Component {
-  state = { hasText: false, style: {}}
   constructor(props) {
     super(props)
+
+    this.style = {
+      default: {
+        height: '1.2rem',
+        padding: '.2rem',
+        marginTop: '.2rem',
+        marginBottom: '.2rem',
+        color: primaryScale[0],
+        backgroundColor: 'transparent',
+        border: 'none',
+        borderBottom: `0.10rem solid ${primaryScale[0]}`,
+        outline: 'none',
+        transitionProperty: 'color',
+        transitionDuration: '.15s'
+      },
+      focus: {
+        borderBottom: `.10rem solid ${primaryScale[2]}`,
+        color: text
+      }
+    }
+    this.state = { hasText: false, style: {}}
+
     this.checkInput = this.checkInput.bind(this)
     this.toggleFocus = this.toggleFocus.bind(this)
   }
@@ -151,25 +187,7 @@ class Filter extends Component {
     ? this.setState({hasText: true})
     : this.setState({hasText: false})
   }
-  style = {
-    default: {
-      height: '1.2rem',
-      padding: '.2rem',
-      marginTop: '.2rem',
-      marginBottom: '.2rem',
-      color: primaryScale[0],
-      backgroundColor: 'transparent',
-      border: 'none',
-      borderBottom: `0.10rem solid ${primaryScale[0]}`,
-      outline: 'none',
-      transitionProperty: 'color',
-      transitionDuration: '.15s'
-    },
-    focus: {
-      borderBottom: `.10rem solid ${primaryScale[2]}`,
-      color: text
-    }
-  }
+
   render() {
     return (
       <input

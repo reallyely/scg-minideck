@@ -3,12 +3,12 @@ import DeckControls from '../components/DeckControls'
 import DeckList from '../components/DeckList'
 
 export default class Deck extends Component {
-  state ={
-    deckListHeight: 0,
-    phantomDeckWidth: 0,
-  }
   constructor(props) {
     super(props)
+    this.state ={
+      deckListHeight: 0,
+      phantomDeckWidth: 0,
+    }
     this.getDC = this.getDC.bind(this)
   }
 

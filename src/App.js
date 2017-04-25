@@ -9,20 +9,22 @@ class App extends Component {
 
   constructor(props) {
     super(props);
+    this.state = {
+      decks: [],
+      staticDeck : [],
+      drawDeck: [],
+      deckList: [],
+      hand: [],
+      selectedDeck: undefined,
+    }
+
     this.filterDeckList = this.filterDeckList.bind(this);
     this.getSelectedDeck = this.getSelectedDeck.bind(this);
     this.expandDeckByQuantity = this.expandDeckByQuantity.bind(this);
     this.drawHand = this.drawHand.bind(this);
     this.draw = this.draw.bind(this);
   }
-  state = {
-    decks: [],
-    staticDeck : [],
-    drawDeck: [],
-    deckList: [],
-    hand: [],
-    selectedDeck: undefined,
-  }
+
   componentDidMount() {
     axios.get('http://localhost:9090/decks')
     .then(res => this.setState({decks: [].concat({name: 'Select a Deck'}, res.data)}))
@@ -76,13 +78,13 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App" style={{
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'flex-start',
-        padding: '1rem',
-        fontFamily: 'Alegreya Sans',
-        color: text,
+      <div style={{
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'flex-start',
+          padding: '1rem',
+          fontFamily: 'Alegreya Sans',
+          color: text,
       }}>
         <Deck
           decks={this.state.decks}

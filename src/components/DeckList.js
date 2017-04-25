@@ -8,9 +8,9 @@ export default class DeckList extends Component {
   constructor(props) {
     super(props);
     this.handleHover = this.handleHover.bind(this);
+    this.state = { hover: false }
+    this.style = {display: 'flex', flexDirection: 'column', height:'20rem'}
   }
-  state = { hover: false }
-  style = {display: 'flex', flexDirection: 'column', height:'20rem'}
   handleHover(hoverImage) {
     this.setState({hoverImage})
   }
