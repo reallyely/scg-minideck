@@ -14,7 +14,8 @@ export default class Hand extends Component {
     this.style = {
       overflow: 'hidden',
       margin: '.25rem',
-      width: '9rem'
+      width: '9rem',
+      position: 'relative'
     }
   }
   render() {
@@ -37,8 +38,8 @@ export default class Hand extends Component {
       }}>
         <CSSTransitionGroup
           transitionName="example"
-          transitionEnterTimeout={200}
-          transitionLeaveTimeout={200}
+          transitionEnterTimeout={250}
+          transitionLeaveTimeout={250}
         >
           {cards}
         </CSSTransitionGroup>

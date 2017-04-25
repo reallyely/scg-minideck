@@ -1,17 +1,22 @@
 .example-enter {
   opacity: 0.1;
+  position: relative;
+  top: 1000px;
 }
 
 .example-enter.example-enter-active {
   opacity: 1;
-  transition: opacity 200ms ease-in;
+  top: 0px;
+  transition: opacity, top 250ms ease-in;
 }
 
 .example-leave {
   opacity: 1;
+  left: 0px;
 }
 
 .example-leave.example-leave-active {
   opacity: 0.01;
-  transition: opacity 200ms ease-in;
+  left: -1000px;
+  transition: opacity, left 250ms ease-in;
 }
