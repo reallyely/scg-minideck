@@ -18,6 +18,10 @@ $ git clone https://github.com/reallyely/scg-minideck.git
 $ cd scg-minideck
 $ npm install
 ```
+
+If it hasn't been modified yet, you'll need to locate your php.ini and ensure that it's pointing to the correct directory.
+```extension=ext/php_mysqli.dll```
+
 After all packages have been installed (it may take a bit), installation is complete.
 
 ### Launch the app
